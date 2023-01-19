@@ -15,8 +15,59 @@ editions = [firstedition, secondedition]
 print("Enter Player 1 Name:")
 player1 = input()
 
+print("Enter " + player1 + "'s current elo rating:")
+elo1 = int(input())
+
 print("Enter Player 2 Name:")
 player2 = input()
+
+print("Enter " + player2 + "'s current elo rating:")
+elo2 = int(input())
+
+elo_difference = abs(elo1 - elo2)
+
+p1_win = 20
+p1_loss = 20
+p2_win = 20
+p2_loss = 20
+
+if elo_difference > 100:
+  if elo1 < elo2: #p1 underdog
+    p1_win += round(elo_difference / 10)
+
+    a = p1_loss - round(elo_difference / 10)
+    p1_loss = p1_loss - round(elo_difference / 10) if a > 0 else 0
+
+    b = p2_win - round(elo_difference / 20)
+    p2_win = p2_win - round(elo_difference / 20) if b > 0 else 0
+
+    p2_loss += round(elo_difference / 20)
+
+    print(player1 + " is the underdog! " + player1 + " will win " + str(p1_win) + " or lose " + str(p1_loss) + ". " + player2 + " will win " + str(p2_win) + " or lose " + str(p2_loss) + ".")
+  else: #p2 underdog
+    p1_loss += round(elo_difference / 20)
+
+    a = p1_win - round(elo_difference / 20)
+    p1_win = p1_win - round(elo_difference / 20) if a > 0 else 0
+
+    b = p2_loss - round(elo_difference / 10)
+    p2_loss = p2_loss - round(elo_difference / 10) if b > 0 else 0
+
+    p2_win += round(elo_difference / 10)
+    print(player2 + " is the underdog! " + player1 + " will win " + str(p1_win) + " or lose " + str(p1_loss) + ". " + player2 + " will win " + str(p2_win) + " or lose " + str(p2_loss) + ".")
+else:
+  #"even" match  
+  if elo1 < elo2:
+    p1_win += 2
+    p1_loss -= 2
+    p2_win += 2
+    p2_loss -= 2
+  else:
+    p1_win -= 2
+    p1_loss += 2
+    p2_win -= 2
+    p2_loss += 2
+
 
 minpool = 1
 maxpool = 2
@@ -24,7 +75,6 @@ maxpool = 2
 print("Enter Map Pool Edition Used: (" + str(minpool) + "-" + str(maxpool) + ")")
 ed = int(input())
 ed -= 1
-
 
 #p1 bans a pool; p2 bans a pool; p1 picks a pool to play first; p2 picks a pool to play second; 3rd pool automatically added;
 temp = [1, 2, 3, 4, 5]
@@ -165,10 +215,14 @@ while p1_poolscore < 2 and p2_poolscore < 2:
 
 if p1_poolscore > p2_poolscore:
   winner = player1
+  elo1 += p1_win
+  elo2 -= p2_loss
 else:
   winner = player2
+  elo2 += p2_win
+  elo1 -= p1_loss
 
-print(winner + " wins!")
+print(winner + " wins! " + player1 + "'s new elo rating: " + str(elo1) + ". " + player2 + "'s new elo rating: " + str(elo2) + ".")
 
 
 
